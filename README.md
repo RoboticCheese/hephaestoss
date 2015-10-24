@@ -1,41 +1,82 @@
-# Hephaestoss
+[![Gem Version](https://img.shields.io/gem/v/hephaestoss.svg)][gem]
+[![Build Status](https://img.shields.io/travis/socrata-platform/hephaestoss.svg)][travis]
+[![Code Climate](https://img.shields.io/codeclimate/github/socrata-platform/hephaestoss.svg)][code
+climate]
+[![Coverage Status](https://img.shields.io/coveralls/socrata-platform/hephaestoss.svg)][coveralls]
+[![Dependency Status](https://img.shields.io/gemnasium/socrata-platform/hephaestoss.svg)][gemnasiu
+m]
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/hephaestoss`. To experiment with that code, run `bin/console` for an interactive prompt.
+[gem]: https://rubygems.org/gems/hephaestoss
+[travis]: https://travis-ci.org/socrata-platform/hephaestoss
+[codeclimate]: https://codeclimate.com/github/socrata-platform/hephaestoss
+[coveralls]: https://coveralls.io/r/socrata-platform/hephaestoss
+[gemnasium]: https://gemnasium.com/socrata-platform/hephaestoss
 
-TODO: Delete this and the text above, and describe your gem
+Hephaestoss
+===========
 
-## Installation
+A work-in-progress OSS refactoring of various components of the Hephaestus
+project.
 
-Add this line to your application's Gemfile:
+Hephaestus is an internal tool used to drive AWS CloudFormation stacks via
+TOML configuration files. Over time, the project has become increasingly
+brittle while also remaining tightly coupled to our specific CF stacks. This
+set of libraries is an attempt to break that coupling and open source the
+pieces of Hephaestus that we can.
 
-```ruby
-gem 'hephaestoss'
-```
+It should be noted that this tool predates more modern ones with similar goals,
+such as [Terraform](https://terraform.io),
+[Chef Provisioning](https://github.com/chef/chef-provisioning), and
+[SparkleFormation](http://www.sparkleformation.io). These other
+options are both promising and gaining significant community support. This
+project's existence should not be read as an indictment of or attempt at
+competing with any of them.
 
-And then execute:
+Requirements
+------------
 
-    $ bundle
+Installation
+------------
 
-Or install it yourself as:
+Add this gem to your project's Gemfile:
+
+    gem 'hephaestoss'
+
+...or install it in your Ruby environment manually:
 
     $ gem install hephaestoss
 
-## Usage
+Usage
+-----
 
-TODO: Write usage instructions here
+Development
+-----------
 
-## Development
+Contributing
+------------
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Pull requests are very welcome! Make sure your patches are well tested. Ideally
+create a topic branch for every separate change you make. For example:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+1. Fork the repo
+2. `bundle install`
+3. Create your feature branch (`git checkout -b my-new-feature`)
+4. Ensure your feature has tests and `rake` passes
+5. Commit your changes (`git commit -am 'Added some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create a new Pull Request
+8. Keep an eye on the PR and ensure the CI build passes
 
-## Contributing
+Authors
+-------
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/hephaestoss. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Created and maintained by the Socrata Engineering team (<sysadmin@socrata.com>).
 
+- Author: Jonathan Hartman (<jonathan.hartman@socrata.com>)
 
-## License
+License
+-------
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+Apache 2.0 (see [LICENSE][license]).
 
+[license]: https://github.com/socrata-platform/hephaestoss/blob/master/LICENSE.txt
