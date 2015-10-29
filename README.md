@@ -15,8 +15,10 @@ m]
 Hephaestoss
 ===========
 
-A work-in-progress OSS refactoring of various components of the Hephaestus
-project.
+An OSS refactoring of various components of the Hephaestus project.
+
+***WARNING: This project is currently a work in progress. It is NOT ready to
+be used anywhere, by anybody.***
 
 Hephaestus is an internal tool used to drive AWS CloudFormation stacks via
 TOML configuration files. Over time, the project has become increasingly
@@ -28,7 +30,7 @@ It should be noted that this tool predates more modern ones with similar goals,
 such as [Terraform](https://terraform.io),
 [Chef Provisioning](https://github.com/chef/chef-provisioning), and
 [SparkleFormation](http://www.sparkleformation.io). These other
-options are both promising and gaining significant community support. This
+options are all promising and gaining significant community support. This
 project's existence should not be read as an indictment of or attempt at
 competing with any of them.
 
