@@ -70,23 +70,35 @@ module Hephaestoss
     # Take an input configuration hash and merge it with all config defaults
     # to build a final config hash for the configurable object:
     #
-    #   * Error out immediately if an invalid config combination was passed in
+    #   * Do the check for an invalid config item combo immediately
     #   * Iterate over every static (non-proc) default value
     #   * Then, yield the configurable object to each default proc (non-static,
     #     potentially derived from earlier default values)
     #
-    # @raise [InvalidConfigCombination] if the user attempted to override two
-    #                                   mutually exclusive settings
     def build_config!
+      fail_if_invalid_combination!
+      self.class.defaults.each { |k, v| config[k] ||= v unless v.is_a?(Proc) }
+      self.class.defaults.each do |k, v|
+        config[k] ||= v.call(self) if v.is_a?(Proc)
+      end
+    end
+
+    #
+    # Iterate over the config hash that's been passed into the class and ensure
+    # no invalid combinations have been passed in. Because some config defaults
+    # can be derived from other config items, this check must be done
+    # immediately upon object instantiation, before any config building or
+    # validation steps occur, even though it might otherwise be described as a
+    # "validation" step.
+    #
+    # @raise [InvalidConfigCombination] if an invalid combo is found
+    #
+    def fail_if_invalid_combination!
       self.class.exclusives.each do |es|
         es.combination(2).each do |e1, e2|
           !@config[e1].nil? && !@config[e2].nil? && \
             fail(Exceptions::InvalidConfigCombination, [e1, e2])
         end
-      end
-      self.class.defaults.each { |k, v| config[k] ||= v unless v.is_a?(Proc) }
-      self.class.defaults.each do |k, v|
-        config[k] ||= v.call(self) if v.is_a?(Proc)
       end
     end
 

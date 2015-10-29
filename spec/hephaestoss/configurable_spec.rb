@@ -119,19 +119,28 @@ describe Hephaestoss::Configurable do
       Class.new do
         include Hephaestoss::Configurable
         default_config :key1, 'value1'
-        default_config :key2, nil
-        default_config :key3, nil
-        exclusive_config :key2, :key3
       end
     end
     let(:config) { {} }
 
     before(:each) do
-      allow_any_instance_of(test_class).to receive(:validate_config!)
+      %i(validate_config! fail_if_invalid_combination!).each do |m|
+        allow_any_instance_of(test_class).to receive(m)
+      end
+    end
+
+    shared_examples_for 'any config' do
+      it 'runs the invalid combination check' do
+        expected = :fail_if_invalid_combination!
+        expect_any_instance_of(test_class).to receive(expected)
+        test_obj
+      end
     end
 
     context 'no overridden defaults' do
       let(:config) { {} }
+
+      it_behaves_like 'any config'
 
       it 'returns the defaults' do
         expect(test_obj.config[:key1]).to eq('value1')
@@ -141,10 +150,25 @@ describe Hephaestoss::Configurable do
     context 'overridden defaults' do
       let(:config) { { key1: 'othervalue' } }
 
+      it_behaves_like 'any config'
+
       it 'returns the overrides' do
         expect(test_obj.config[:key1]).to eq('othervalue')
       end
     end
+  end
+
+  describe '#fail_if_invalid_combination!' do
+    let(:test_class) do
+      Class.new do
+        include Hephaestoss::Configurable
+        default_config :key1, 'value1'
+        default_config :key2, nil
+        default_config :key3, nil
+        exclusive_config :key2, :key3
+      end
+    end
+    let(:config) { {} }
 
     context 'two conflicting mutually exclusive config overrides' do
       let(:config) { { key2: 'val2', key3: 'val3' } }
