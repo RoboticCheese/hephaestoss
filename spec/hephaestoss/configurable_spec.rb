@@ -157,6 +157,24 @@ describe Hephaestoss::Configurable do
   end
 
   describe '#validate_config!' do
+    before(:each) do
+      %i(fail_if_invalid_key! fail_if_missing_key!).each do |m|
+        allow_any_instance_of(test_class).to receive(m)
+      end
+    end
+
+    it 'runs the invalid key checks' do
+      expect_any_instance_of(test_class).to receive(:fail_if_invalid_key!)
+      test_obj
+    end
+
+    it 'runs the missing key checks' do
+      expect_any_instance_of(test_class).to receive(:fail_if_missing_key!)
+      test_obj
+    end
+  end
+
+  describe '#fail_if_invalid_key!' do
     let(:test_class) do
       Class.new do
         include Hephaestoss::Configurable
@@ -172,20 +190,36 @@ describe Hephaestoss::Configurable do
       end
     end
 
-    context 'an invalid config missing a required key' do
-      let(:config) { {} }
-
-      it 'raises an error' do
-        expected = Hephaestoss::Exceptions::ConfigMissing
-        expect { test_obj }.to raise_error(expected)
-      end
-    end
-
     context 'an invalid config with an unrecognized config key' do
       let(:config) { { thing2: 'bad' } }
 
       it 'raises an error' do
         expected = Hephaestoss::Exceptions::InvalidConfig
+        expect { test_obj }.to raise_error(expected)
+      end
+    end
+  end
+
+  describe '#fail_if_missing_key!' do
+    let(:test_class) do
+      Class.new do
+        include Hephaestoss::Configurable
+        required_config :thing1
+      end
+    end
+
+    context 'a valid config' do
+      let(:config) { { thing1: 'test' } }
+
+      it 'passes' do
+        expect(test_obj.config[:thing1]).to eq('test')
+      end
+    end
+    context 'an invalid config missing a required key' do
+      let(:config) { {} }
+
+      it 'raises an error' do
+        expected = Hephaestoss::Exceptions::ConfigMissing
         expect { test_obj }.to raise_error(expected)
       end
     end

@@ -91,21 +91,38 @@ module Hephaestoss
     end
 
     #
-    # Iterate over any config validation that needs to be done for the built
-    # config hash:
+    # Perform validation checks on an assembled config hash, failing
+    # immediately if any violations are found.
     #
-    #   * Ensure each config key is a recognized one (listed as a default or
-    #     required config item)
-    #   * Ensure each required config item is present and non-nil
-    #
-    # @raise [ConfigError] if a config key validation fails
+    # @raise [Exceptions] if the config is invalid
     #
     def validate_config!
+      fail_if_invalid_key!
+      fail_if_missing_key!
+    end
+
+    #
+    # Iterate over every key in the running config and ensure it's recognized
+    # (i.e. defined in its class by a `default_config` or `required_config`
+    # block). Fail immediately if an invalid key is found.
+    #
+    # @raise [InvalidConfig] if a key is not recognized as valid
+    #
+    def fail_if_invalid_key!
       config.each do |k, _|
         unless (self.class.defaults.keys + self.class.required).include?(k)
           fail(Exceptions::InvalidConfig, k)
         end
       end
+    end
+
+    #
+    # Iterate over every required config key and bail out if it's missing from
+    # the running config. Can only be run after the config has been built.
+    #
+    # @raise [ConfigMissing] if a key is required but missing
+    #
+    def fail_if_missing_key!
       self.class.required.each do |r|
         fail(Exceptions::ConfigMissing, r) if config[r].nil?
       end
