@@ -70,6 +70,26 @@ describe Hephaestoss::SecurityGroup::Ingress::Rule do
       end
     end
 
+    context 'a config with port "all"' do
+      let(:config) { { port: 'all', subnet: 'example', protocol: 'tcp' } }
+
+      it 'uses the specified protocol' do
+        expect(rule.protocol).to eq('tcp')
+      end
+
+      it 'correctly parses the from_port' do
+        expect(rule.from_port).to eq(0)
+      end
+
+      it 'correctly parses the to_port' do
+        expect(rule.to_port).to eq(65_535)
+      end
+
+      it 'correctly parses the CIDR range' do
+        expect(rule.cidr).to eq('10.0.0.0/8')
+      end
+    end
+
     context 'a config item missing any port information' do
       let(:config) { { subnet: 'example' } }
 

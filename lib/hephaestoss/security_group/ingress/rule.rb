@@ -23,7 +23,14 @@ module Hephaestoss
   class SecurityGroup
     class Ingress
       # A class representing a single ingress rule with protocols, ports, and
-      # subnets/CIDrs.
+      # subnets/CIDrs. Configurable attributes for this class include:
+      #
+      #   * `protocol` - e.g. 'tcp' or 'icmp'
+      #   * `port` - e.g. 22, 443, or 'all'
+      #   * `from_port` - Instead of a single port, define an inclusive range
+      #   * `to_port` - Instead of a single port, define an inclusive range
+      #   * `subnet` - The name of a subnet that maps to a CIDR range
+      #   * `cidr` - Instead of a name, the actual CIDR range to apply to
       #
       # @author Jonathan Hartman <jonathan.hartman@socrata.com>
       class Rule
@@ -31,8 +38,12 @@ module Hephaestoss
 
         default_config :protocol, 'tcp'
         default_config :port, nil
-        default_config(:from_port, &:port)
-        default_config(:to_port, &:port)
+        default_config :from_port do |rule|
+          rule.port == 'all' ? 0 : rule.port
+        end
+        default_config :to_port do |rule|
+          rule.port == 'all' ? 65_535 : rule.port
+        end
         default_config :subnet, nil
         default_config :cidr do |rule|
           # TODO: `subnet_cidrs` needs to be defined and needs a (configurable)
