@@ -44,7 +44,6 @@ describe Hephaestoss::Subnets do
     let(:res) { subnets[subnet] }
 
     { string: 'all', symbol: :all }.each do |k, v|
-
       context "a subnet represented as a #{k}" do
         let(:subnet) { v }
 

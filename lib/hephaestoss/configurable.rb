@@ -102,7 +102,7 @@ module Hephaestoss
     #
     def validate_config!
       config.each do |k, _|
-        if !(self.class.defaults.keys + self.class.required).include?(k)
+        unless (self.class.defaults.keys + self.class.required).include?(k)
           fail(Exceptions::InvalidConfig, k)
         end
       end

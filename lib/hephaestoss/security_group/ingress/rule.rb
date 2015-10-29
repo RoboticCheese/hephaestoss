@@ -22,17 +22,17 @@ require_relative '../../configurable'
 module Hephaestoss
   class SecurityGroup
     class Ingress
+      # A class representing a single ingress rule with protocols, ports, and
+      # subnets/CIDrs.
+      #
+      # @author Jonathan Hartman <jonathan.hartman@socrata.com>
       class Rule
         include Configurable
 
         default_config :protocol, 'tcp'
         default_config :port, nil
-        default_config :from_port do |rule|
-          rule.port
-        end
-        default_config :to_port do |rule|
-          rule.port
-        end
+        default_config(:from_port, &:port)
+        default_config(:to_port, &:port)
         default_config :subnet, nil
         default_config :cidr do |rule|
           # TODO: `subnet_cidrs` needs to be defined and needs a (configurable)

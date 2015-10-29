@@ -23,7 +23,7 @@ describe Hephaestoss::Exceptions do
   describe Hephaestoss::Exceptions::InvalidConfigCombination do
     describe '#initialize' do
       it 'complains about an invalid key combination' do
-        expected = "The `[:key1, :key2]` config keys are mutually exclusive"
+        expected = 'The `[:key1, :key2]` config keys are mutually exclusive'
         expect(described_class.new([:key1, :key2]).message).to eq(expected)
       end
     end

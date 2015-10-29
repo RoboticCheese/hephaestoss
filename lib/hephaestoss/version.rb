@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+# The Hephaestoss VERSION string
+#
+# @author Jonathan Hartman <jonathan.hartman@socrata.com>
 module Hephaestoss
-  VERSION = "0.1.0"
+  VERSION = '0.0.1'
 end

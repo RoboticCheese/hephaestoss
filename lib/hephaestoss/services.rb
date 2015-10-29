@@ -75,7 +75,7 @@ module Hephaestoss
       #
       def mapping
         @mapping ||= JSON.parse(File.open(instance.config[:path]).read,
-                                          symbolize_names: true)
+                                symbolize_names: true)
       end
     end
   end

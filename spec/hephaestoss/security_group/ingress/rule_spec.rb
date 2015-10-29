@@ -77,7 +77,7 @@ describe Hephaestoss::SecurityGroup::Ingress::Rule do
     end
 
     context 'a config with a from_port but missing a to_port' do
-      let(:config) { { from_port: 80, subnet: 'example'  } }
+      let(:config) { { from_port: 80, subnet: 'example' } }
 
       it_behaves_like 'a config item missing'
     end

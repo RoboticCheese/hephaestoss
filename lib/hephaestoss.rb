@@ -19,6 +19,14 @@
 
 require 'hephaestoss/version'
 
+# The main Hephaestoss module under which all components will live.
+#
+# @author Jonathan Hartman <jonathan.hartman@socrata.com>
 module Hephaestoss
-  # Your code goes here...
+  class << self
+    def configure!(config = {})
+      Services.configure!(config[:services])
+      Subnets.configure!(config[:subnets])
+    end
+  end
 end
