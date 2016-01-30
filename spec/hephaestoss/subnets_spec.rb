@@ -15,17 +15,18 @@ describe Hephaestoss::Subnets do
 
       it 'uses the default path' do
         expected = File.expand_path('../../../data/subnets.json', __FILE__)
-        # TODO: Having to type the .instance here is annoying
-        expect(subnets.instance.path).to eq(expected)
+        expect(subnets.config[:path]).to eq(expected)
       end
     end
 
     context 'a config with a specific JSON path' do
-      let(:config) { { path: '/tmp/things.json' } }
+      let(:config) do
+        { path: File.expand_path('../../support/data/subnets.json', __FILE__) }
+      end
 
       it 'uses the specified path' do
-        # TODO: Having to type the .instance here is annoying
-        expect(subnets.instance.path).to eq('/tmp/things.json')
+        expected = File.expand_path('../../support/data/subnets.json', __FILE__)
+        expect(subnets.config[:path]).to eq(expected)
       end
     end
 
@@ -41,14 +42,13 @@ describe Hephaestoss::Subnets do
 
   describe '.[]' do
     let(:subnet) { nil }
-    let(:res) { subnets[subnet] }
 
     { string: 'all', symbol: :all }.each do |k, v|
       context "a subnet represented as a #{k}" do
         let(:subnet) { v }
 
         it 'returns the expected subnet' do
-          expect(res).to eq(%w(0.0.0.0/0))
+          expect(subnets[subnet]).to eq(%w(0.0.0.0/0))
         end
       end
     end

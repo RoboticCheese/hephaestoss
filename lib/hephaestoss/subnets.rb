@@ -21,7 +21,7 @@ require 'json'
 require_relative 'configurable'
 
 module Hephaestoss
-  # A singletone class used to store and lookup information about subnets and
+  # A singleton class used to store and look up information about subnets and
   # the IP ranges that reside in them. The Subnets class needs to be configured
   # with a `path` attribute, pointing to a JSON file that defines recognized
   # subnets, e.g.:
@@ -36,6 +36,8 @@ module Hephaestoss
 
     default_config :path, File.expand_path('../../../data/subnets.json',
                                            __FILE__)
+
+    required_config :path
 
     class << self
       #
@@ -59,18 +61,20 @@ module Hephaestoss
         mapping
       end
 
+      #
+      # Read in and save the JSON file after completing all other configuration.
+      #
+      # (see Hephaestoss::Configurable.configure!)
+      #
+      def configure!(config = {})
+        super
+        @mapping = JSON.parse(File.open(@config[:path]).read,
+                              symbolize_names: true)
+      end
+
       private
 
-      #
-      # Read in the configured JSON file and store it in a class variable.
-      # Convert the keys into symbols.
-      #
-      # @return [Hash] the class' service and port mappings
-      #
-      def mapping
-        @mapping ||= JSON.parse(File.open(instance.config[:path]).read,
-                                symbolize_names: true)
-      end
+      attr_reader :mapping
     end
   end
 end
