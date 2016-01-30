@@ -1,14 +1,14 @@
 require_relative '../../../spec_helper'
-require_relative '../../../../lib/hephaestoss/security_group/ingress/rule'
+require_relative '../../../lib/hephaestoss/security_group/rule'
 
-describe Hephaestoss::SecurityGroup::Ingress::Rule do
+describe Hephaestoss::SecurityGroup::Rule do
   let(:config) { nil }
   let(:rule) { described_class.new(config) }
 
-  before(:each) do
-    allow(described_class).to receive(:subnet_cidrs)
-      .and_return(example: '10.0.0.0/8')
-  end
+  # before(:each) do
+  #   allow(described_class).to receive(:subnet_cidrs)
+  #     .and_return(example: '10.0.0.0/8')
+  # end
 
   describe '#initialize' do
     shared_examples_for 'a config item missing' do
