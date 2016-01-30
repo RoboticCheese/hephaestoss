@@ -214,16 +214,17 @@ module Hephaestoss
       end
 
       #
-      # Provide a class .configure! method for singleton classes that saves
-      # an instance of the class in @instance that can then be used by other
-      # class methods.
+      # Provide a class `.configure!` method for singleton classes that uses
+      # the above instance methods to create a temporary instance and make its
+      # config accessible via a `.config` class method.
       #
       # @param config [Hash] a configuration Hash
       #
       def configure!(config = {})
-        @instance = new(config || {})
+        @config = new(config || {}).config
       end
-      attr_reader :instance
+
+      attr_reader :config
     end
   end
 end

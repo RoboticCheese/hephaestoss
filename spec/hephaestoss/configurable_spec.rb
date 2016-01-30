@@ -325,9 +325,11 @@ describe Hephaestoss::Configurable do
     end
 
     describe '.configure!' do
-      it 'saves a new class instance in a class variable' do
+      it 'saves the validated config in a class variable' do
         c = test_class
-        expect(c.configure!).to be_an_instance_of(c)
+        expect(c.config).to eq(nil)
+        expect(c.configure!).to be_an_instance_of(Hash)
+        expect(c.config).to be_an_instance_of(Hash)
       end
     end
   end
