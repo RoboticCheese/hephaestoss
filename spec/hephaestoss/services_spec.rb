@@ -15,17 +15,19 @@ describe Hephaestoss::Services do
 
       it 'uses the default path' do
         expected = File.expand_path('../../../data/services.json', __FILE__)
-        # TODO: Having to type the .instance here is annoying
-        expect(services.instance.path).to eq(expected)
+        expect(services.config[:path]).to eq(expected)
       end
     end
 
     context 'a config with a specific JSON path' do
-      let(:config) { { path: '/tmp/things.json' } }
+      let(:config) do
+        { path: File.expand_path('../../support/data/services.json', __FILE__) }
+      end
 
       it 'uses the specified path' do
-        # TODO: Having to type the .instance here is annoying
-        expect(services.instance.path).to eq('/tmp/things.json')
+        expected = File.expand_path('../../support/data/services.json',
+                                    __FILE__)
+        expect(services.config[:path]).to eq(expected)
       end
     end
 

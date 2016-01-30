@@ -43,6 +43,8 @@ module Hephaestoss
     default_config :path, File.expand_path('../../../data/services.json',
                                            __FILE__)
 
+    required_config :path
+
     class << self
       #
       # Provide service lookups as index calls on the class.
@@ -65,18 +67,21 @@ module Hephaestoss
         mapping
       end
 
-      private
-
       #
-      # Read in the configured JSON file and store it in a class variable.
-      # Convert the keys into symbols.
+      # Read in and save the JSON file after completing all other configuration.
       #
+      # (see Hephaestoss::Configurable.configure!)
       # @return [Hash] the class' service and port mappings
       #
-      def mapping
-        @mapping ||= JSON.parse(File.open(instance.config[:path]).read,
+      def configure!(config = {})
+        super
+        @mapping ||= JSON.parse(File.open(@config[:path]).read,
                                 symbolize_names: true)
       end
+
+      private
+
+      attr_reader :mapping
     end
   end
 end
