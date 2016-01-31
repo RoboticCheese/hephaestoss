@@ -4,7 +4,6 @@ require_relative '../../lib/hephaestoss/subnets'
 describe Hephaestoss::Subnets do
   let(:config) { nil }
   let(:subnets) do
-    described_class.instance_variable_set(:@mapping, nil)
     described_class.configure!(config)
     described_class
   end
@@ -41,16 +40,12 @@ describe Hephaestoss::Subnets do
   end
 
   describe '.[]' do
-    let(:subnet) { nil }
+    let(:config) do
+      { path: File.expand_path('../../support/data/subnets.json', __FILE__) }
+    end
 
-    { string: 'all', symbol: :all }.each do |k, v|
-      context "a subnet represented as a #{k}" do
-        let(:subnet) { v }
-
-        it 'returns the expected subnet' do
-          expect(subnets[subnet]).to eq(%w(0.0.0.0/0))
-        end
-      end
+    it 'returns the expected subnet' do
+      expect(subnets[:test][:all]).to eq(%w(0.0.0.0/0))
     end
   end
 
@@ -75,7 +70,6 @@ describe Hephaestoss::Subnets do
 
       it 'returns a subnets hash' do
         expect(subnets.send(:mapping)).to be_an_instance_of(Hash)
-        expect(subnets.send(:mapping)).to include(:all)
       end
     end
 
@@ -94,7 +88,7 @@ describe Hephaestoss::Subnets do
       it_behaves_like 'any config'
 
       it 'returns the expected hash' do
-        expect(subnets.send(:mapping)).to eq(all: %w(0.0.0.0/0))
+        expect(subnets.send(:mapping)).to eq(test: { all: %w(0.0.0.0/0) })
       end
     end
   end

@@ -23,11 +23,18 @@ require_relative 'configurable'
 module Hephaestoss
   # A singleton class used to store and look up information about subnets and
   # the IP ranges that reside in them. The Subnets class needs to be configured
-  # with a `path` attribute, pointing to a JSON file that defines recognized
-  # subnets, e.g.:
+  # with a `path` attribute, pointing to a JSON file that defines environments
+  # and their subnets, e.g.:
   #
   #   {
-  #     "all": ["0.0.0.0/0"]
+  #     "staging": {
+  #       "service1": ["10.1.0.0/16", "10.2.0.0/16"],
+  #       "service2": ["10.3.0.0/16", "10.4.0.0/16"]
+  #     },
+  #     "prod": {
+  #       "service1": ["10.5.0.0/16", "10.6.0.0/16"],
+  #       "service2": ["10.7.0.0/16", "10.8.0.0/16"]
+  #     }
   #   }
   #
   # @author Jonathan Hartman <jonathan.hartman@socrata.com>
@@ -43,13 +50,13 @@ module Hephaestoss
       #
       # Provide subnet lookups as index calls on the class.
       #
-      # @param [String] the subnet name to look up
-      # @param [Symbol] the subnet name to look up
+      # @param environment [String] the environment name to look up
+      # @param environment [Symbol] the environment name to look up
       #
       # @return [Array] the CIDR ranges for that subnet
       #
-      def [](subnet)
-        to_h[subnet.to_sym]
+      def [](environment)
+        to_h[environment.to_sym]
       end
 
       #
