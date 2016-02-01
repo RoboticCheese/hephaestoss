@@ -1,14 +1,9 @@
-require_relative '../../../spec_helper'
+require_relative '../../spec_helper'
 require_relative '../../../lib/hephaestoss/security_group/rule'
 
 describe Hephaestoss::SecurityGroup::Rule do
   let(:config) { nil }
   let(:rule) { described_class.new(config) }
-
-  # before(:each) do
-  #   allow(described_class).to receive(:subnet_cidrs)
-  #     .and_return(example: '10.0.0.0/8')
-  # end
 
   describe '#initialize' do
     shared_examples_for 'a config item missing' do
@@ -31,7 +26,7 @@ describe Hephaestoss::SecurityGroup::Rule do
     end
 
     context 'a minimal valid config' do
-      let(:config) { { port: 80, subnet: 'example' } }
+      let(:config) { { port: 80, cidr: '0.0.0.0/0' } }
 
       it 'uses the default protocol' do
         expect(rule.protocol).to eq('tcp')
@@ -45,13 +40,15 @@ describe Hephaestoss::SecurityGroup::Rule do
         expect(rule.to_port).to eq(80)
       end
 
-      it 'correctly parses the CIDR range' do
-        expect(rule.cidr).to eq('10.0.0.0/8')
+      it 'uses the specified CIDR range' do
+        expect(rule.cidr).to eq('0.0.0.0/0')
       end
     end
 
     context 'a config with a specific protocol' do
-      let(:config) { { port: 80, subnet: 'example', protocol: 'udp' } }
+      let(:config) do
+        { port: 80, protocol: 'udp', cidr: '0.0.0.0/0' }
+      end
 
       it 'uses the specified protocol' do
         expect(rule.protocol).to eq('udp')
@@ -65,13 +62,15 @@ describe Hephaestoss::SecurityGroup::Rule do
         expect(rule.to_port).to eq(80)
       end
 
-      it 'correctly parses the CIDR range' do
-        expect(rule.cidr).to eq('10.0.0.0/8')
+      it 'uses the specified CIDR range' do
+        expect(rule.cidr).to eq('0.0.0.0/0')
       end
     end
 
     context 'a config with port "all"' do
-      let(:config) { { port: 'all', subnet: 'example', protocol: 'tcp' } }
+      let(:config) do
+        { port: 'all', protocol: 'tcp', cidr: '0.0.0.0/0' }
+      end
 
       it 'uses the specified protocol' do
         expect(rule.protocol).to eq('tcp')
@@ -85,37 +84,37 @@ describe Hephaestoss::SecurityGroup::Rule do
         expect(rule.to_port).to eq(65_535)
       end
 
-      it 'correctly parses the CIDR range' do
-        expect(rule.cidr).to eq('10.0.0.0/8')
+      it 'uses the specified CIDR range' do
+        expect(rule.cidr).to eq('0.0.0.0/0')
       end
     end
 
     context 'a config item missing any port information' do
-      let(:config) { { subnet: 'example' } }
+      let(:config) { { cidr: '0.0.0.0/0' } }
 
       it_behaves_like 'a config item missing'
     end
 
     context 'a config with a from_port but missing a to_port' do
-      let(:config) { { from_port: 80, subnet: 'example' } }
+      let(:config) { { from_port: 80, cidr: '0.0.0.0/0' } }
 
       it_behaves_like 'a config item missing'
     end
 
     context 'a config with a to_port but missing a from_port' do
-      let(:config) { { to_port: 80, subnet: 'example' } }
+      let(:config) { { to_port: 80, cidr: '0.0.0.0/0' } }
 
       it_behaves_like 'a config item missing'
     end
 
     context 'a config with both a port and from_port' do
-      let(:config) { { port: 80, from_port: 80, subnet: 'example' } }
+      let(:config) { { port: 80, from_port: 80, cidr: '0.0.0.0/0' } }
 
       it_behaves_like 'an invalid config combination'
     end
 
     context 'a config with both a port and to_port' do
-      let(:config) { { port: 80, to_port: 80, subnet: 'example' } }
+      let(:config) { { port: 80, to_port: 80, cidr: '0.0.0.0/0' } }
 
       it_behaves_like 'an invalid config combination'
     end
@@ -125,20 +124,14 @@ describe Hephaestoss::SecurityGroup::Rule do
 
       it_behaves_like 'a config item missing'
     end
-
-    context 'a config with both a subnet and CIDR' do
-      let(:config) { { port: 80, subnet: 'example', cidr: '10.0.0.0/8' } }
-
-      it_behaves_like 'an invalid config combination'
-    end
   end
 
   describe '#to_h' do
-    let(:config) { { port: 80, subnet: 'example' } }
+    let(:config) { { port: 80, cidr: '0.0.0.0/0' } }
 
     it 'returns an AWS-formatted ingress rule hash' do
       expected = {
-        CidrIp: '10.0.0.0/8',
+        CidrIp: '0.0.0.0/0',
         FromPort: 80,
         ToPort: 80,
         IpProtocol: 'tcp'
