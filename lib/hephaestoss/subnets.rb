@@ -50,13 +50,12 @@ module Hephaestoss
       #
       # Provide subnet lookups as index calls on the class.
       #
-      # @param environment [String] the environment name to look up
       # @param environment [Symbol] the environment name to look up
       #
       # @return [Array] the CIDR ranges for that subnet
       #
       def [](environment)
-        to_h[environment.to_sym]
+        to_h[environment]
       end
 
       #
